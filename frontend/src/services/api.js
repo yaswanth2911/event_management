@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
+  baseURL: 'https://event-management-i1tc.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
