@@ -14,7 +14,11 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-@5k4bh02$w=72&
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 # Dynamic host alignment for external request listening
-ALLOWED_HOSTS = ['*'] 
+ALLOWED_HOSTS = [
+    "event-management-i1tc.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # --- APPLICATION DEFINITION ---
@@ -153,9 +157,10 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
     "http://localhost:5173",
-    "https://event-management-ochre-eta.vercel.app",  # Add your live frontend URL here
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "https://event-management-ochre-eta.vercel.app",
 ]
 # --- TRANSACTIONAL SMTP NOTIFICATION SERVICES ---
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
