@@ -34,7 +34,7 @@ API.interceptors.response.use(
       if (refreshToken) {
         try {
           // Attempt to get a fresh access token using the refresh token
-          const res = await axios.post('http://127.0.0.1:8000/api/token/refresh/', {
+         const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/token/refresh/`, {
             refresh: refreshToken,
           });
           
