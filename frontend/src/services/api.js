@@ -1,6 +1,6 @@
-// src/services/api.js
 import axios from 'axios';
 
+// Dynamically use the production Vercel variable, falling back to local for dev workflows
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api',
   headers: {
@@ -8,7 +8,7 @@ const API = axios.create({
   },
 });
 
-// Interceptor 1: Automatically attach Access Token to outbound requests
+// Request Interceptor: Attach JWT Access Tokens dynamically
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
@@ -20,35 +20,31 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptor 2: Handle Expired Tokens automatically
+// Response Interceptor: Seamless background silent token refresh handling
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
     
-    // If backend returns 401 and we haven't tried retrying yet
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refresh_token');
 
       if (refreshToken) {
         try {
-          // Attempt to get a fresh access token using the refresh token
-         const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/token/refresh/`, {
+          // Dynamic production URL routing for silent refresh loop
+          const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api'}/token/refresh/`, {
             refresh: refreshToken,
           });
-          
+
           const newAccessToken = res.data.access;
           localStorage.setItem('access_token', newAccessToken);
-          
-          // Re-fire the original request that failed
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          
           return API(originalRequest);
         } catch (refreshError) {
-          // Both tokens are invalid or expired -> Clear store and boot to login
           localStorage.clear();
           window.location.href = '/login';
-          return Promise.reject(refreshError);
         }
       }
     }
