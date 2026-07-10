@@ -21,7 +21,7 @@ const NavigationBar = () => {
 
   return (
     <nav className="bg-slate-900 text-white p-4 flex justify-between items-center shadow-md">
-      <Link to="/" className="font-extrabold text-xl tracking-wider text-indigo-400">⚡EventConnect</Link>
+      <Link to="/" className="font-extrabold text-xl tracking-wider text-indigo-400">⚡ EVENTIFY</Link>
       <div className="flex gap-6 items-center">
         <Link to="/" className="hover:text-indigo-300 transition">Events</Link>
         
